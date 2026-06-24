@@ -79,9 +79,8 @@ class K1ThrowInControllerCfg(K1BeyondMimicControllerCfg):
 
     def __post_init__(self):
         super().__post_init__()
-        prepare_joint_pos = _motion_frame0_joint_pos(
-            "motions/throw_in_012_002_003_final.npz"
-        )
+        # Use default walking stance as prepare pose instead of motion's first frame
+        prepare_joint_pos = list(K1_CFG.prepare_state.joint_pos)
         self.robot = self.robot.replace(
             joint_damping=_runtime_joint_damping(),
             prepare_state=self.robot.prepare_state.replace(
@@ -93,7 +92,7 @@ class K1ThrowInControllerCfg(K1BeyondMimicControllerCfg):
             startup_steps=10,
         )
         self.policy.motion_path = "motions/throw_in_012_002_003_final.npz"
-        self.policy.checkpoint_path = "models/model_10000_scripted.pt"
+        self.policy.checkpoint_path = "models/model_37000_scripted.pt"
         self.policy.stop_after_motion = True
         self.mujoco.log_states = "throw_in_sim2sim"
 

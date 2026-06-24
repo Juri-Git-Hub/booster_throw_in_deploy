@@ -7,17 +7,14 @@ robot="${ROBOT_HOST:-user@robot.local}"
 destination="${ROBOT_DESTINATION:-/home/user/k1_throw_in_deploy/}"
 
 files=(
-    run_stage_robot.sh
     run_robot.sh
     scripts/deploy.py
     scripts/preflight_robot.py
     scripts/dry_run_robot.py
     tasks/throw_in/__init__.py
     tasks/throw_in/README.md
-    tasks/throw_in/models/model_10000_scripted.pt
+    tasks/throw_in/models/model_37000_scripted.pt
     tasks/throw_in/motions/throw_in_012_002_003_final.npz
-    tasks/throw_in/motions/throw_in_stage_040.npz
-    tasks/throw_in_stage/__init__.py
     tasks/beyond_mimic/beyond_mimic.py
     booster_deploy/robots/booster.py
     booster_deploy/controllers/base_controller.py

@@ -514,7 +514,7 @@ class BoosterRobotPortal:
 
         # exit and switch to walking mode
         self.logger.info("Exiting controller, switching to walking mode...")
-        self.client.ChangeMode(RobotMode.kWalking)
+        self.client.ChangeMode(RobotMode.kPrepare)
 
     def __enter__(self) -> BoosterRobotPortal:
         return self
