@@ -3,44 +3,37 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-robot="${ROBOT_HOST:-user@robot.local}"
-destination="${ROBOT_DESTINATION:-/home/user/k1_throw_in_deploy/}"
-
-files=(
-    run_robot.sh
-    scripts/deploy.py
-    scripts/preflight_robot.py
-    scripts/dry_run_robot.py
-    tasks/throw_in/__init__.py
-    tasks/throw_in/README.md
-    tasks/throw_in/models/model_37000_scripted.pt
-    tasks/throw_in/motions/throw_in_012_002_003_final.npz
-    tasks/beyond_mimic/beyond_mimic.py
-    booster_deploy/robots/booster.py
-    booster_deploy/controllers/base_controller.py
-    booster_deploy/controllers/controller_cfg.py
-    booster_deploy/controllers/booster_robot_controller.py
-    booster_deploy/utils/robot_telemetry.py
-)
+robot="${ROBOT_HOST:-booster@10.0.14.13}"
+destination="${ROBOT_DESTINATION:-/home/booster/k1_throw_in_deploy/}"
 
 echo "Syncing K1 throw-in deployment to ${robot}:${destination}"
-rsync \
+sshpass -p 123456 rsync \
     --archive \
     --compress \
     --human-readable \
     --progress \
-    --relative \
-    "${files[@]}" \
+    --delete \
+    --rsh="sshpass -p 123456 ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password" \
+    --exclude='__pycache__' \
+    --exclude='*.pyc' \
+    --exclude='.git' \
+    --exclude='logs' \
+    . \
     "${robot}:${destination}"
 
 echo "Syncing K1 URDF, MuJoCo XML, and meshes."
-ssh "${robot}" \
-    "mkdir -p '${destination}booster_assets/robots/K1'"
-rsync \
+sshpass -p 123456 ssh \
+    -o StrictHostKeyChecking=no \
+    -o PreferredAuthentications=password \
+    "${robot}" "mkdir -p '${destination}booster_assets/robots/K1'"
+
+sshpass -p 123456 rsync \
     --archive \
     --compress \
     --human-readable \
     --progress \
+    --delete \
+    --rsh="sshpass -p 123456 ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password" \
     ../booster_assets/robots/K1/ \
     "${robot}:${destination}booster_assets/robots/K1/"
 
